@@ -1,65 +1,121 @@
 # Deep-Learning-Exp4
 
-**Implement a Transfer Learning concept in Image Classification**
+## Implement a Transfer Learning concept in Image Classification
 
-**AIM**
+## AIM
 
-To develop an image classification model using transfer learning with VGG19 architecture for the given dataset.
+To develop an image classification model using transfer learning by using the pre-trained MobileNetV2 architecture and training a new classifier on the CIFAR-10 dataset.
 
-**THEORY**
+## THEORY 
 
-Neural Network Model
+Transfer Learning is a deep learning technique where a model trained on a large dataset is reused for another related task. Instead of training a neural network from scratch, we use a pre-trained model such as VGG19, ResNet, or MobileNetV2, which already learned powerful feature representations from millions of images. This reduces training time, improves accuracy, and requires less data.
 
-Include the neural network model diagram.
+MobileNetV2 is an efficient convolutional neural network designed for mobile and embedded systems. It uses depthwise separable convolutions, inverted residual blocks, and linear bottlenecks. These techniques help reduce the number of parameters while still maintaining good accuracy. In transfer learning, the base layers of MobileNetV2 act as a feature extractor, and only the top layers (classifier) are newly added and trained. For the CIFAR-10 dataset, new dense layers are attached at the end to classify the 10 image categories.
 
-**DESIGN STEPS**
+## DESIGN STEPS 
+STEP 1: Import the required libraries
 
-STEP 1:
+  - Load TensorFlow and Keras modules needed for building and training the neural network.
 
-Write your own steps
+STEP 2: Load and preprocess the CIFAR-10 dataset
 
-STEP 2:
+  - Load the training and testing images.
+  - Normalize the pixel values to the range 0–1 so the model learns efficiently.
 
-STEP 3:
+STEP 3: Load the pre-trained MobileNetV2 model
 
-STEP 4:
+  - Use MobileNetV2 with ImageNet weights.
+  - Remove the top classifier layer since we will add our own.
+  - Freeze the base model so its weights do not change during training.
 
-STEP 5:
+STEP 4: Add custom classification layers
 
-STEP 6:
+  - Attach layers like Global Average Pooling, Dense layer, Dropout, and final output layer for 10 classes.
+  - These layers will learn to classify the CIFAR-10 images.
 
-**PROGRAM**
+STEP 5: Compile the model
 
-**Name:**
+  - Choose an optimizer (Adam), loss function (cross-entropy), and accuracy as the performance metric.
 
-**Register Number:**
+STEP 6: Train the model
 
-*# Load Pretrained Model and Modify for Transfer Learning
+  - Train the model for a few epochs using the training data and validate on the test data.
 
-*# Modify the final fully connected layer to match the dataset classes
+STEP 7: Evaluate the model
 
-*# Include the Loss function and optimizer
+  - Measure the accuracy and loss of the trained model on unseen test images.
 
-*# Train the model
+STEP 8: Save the trained model
 
-**OUTPUT**
+  - Store the final trained model in a file so it can be loaded and used later.
 
-Training Loss, Validation Loss Vs Iteration Plot
+## PROGRAM
 
-Include your plot here
+**Name:** LIVYA DHARSHINI G   
 
-**Confusion Matrix**
+**Register Number:** 2305001013
 
-Include confusion matrix here
+``` Python
+# Experiment: Transfer Learning for Image Classification
+# ------------------------------------------------------
 
-**Classification Report**
+# Step 1: Import Libraries
+import tensorflow as tf
+from tensorflow.keras import layers, models
 
-Include classification report here
+# Step 2: Load and Preprocess Dataset (CIFAR-10)
+(train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.cifar10.load_data()
 
-**New Sample Data Prediction**
+# Normalize pixel values to range [0,1]
+train_images, test_images = train_images / 255.0, test_images / 255.0
 
-Include your sample input and output here
+# Step 3: Load Pre-trained Model (MobileNetV2)
+base_model = tf.keras.applications.MobileNetV2(
+    input_shape=(32, 32, 3),
+    include_top=False,
+    weights='imagenet'
+)
+base_model.trainable = False  # Freeze the base layers
 
-**RESULT**
+# Step 4: Add Custom Classification Layers
+model = models.Sequential([
+    base_model,
+    layers.GlobalAveragePooling2D(),
+    layers.Dense(128, activation='relu'),
+    layers.Dropout(0.3),
+    layers.Dense(10, activation='softmax')  # 10 classes in CIFAR-10
+])
 
-Include your result here
+# Step 5: Compile the Model
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Step 6: Train the Model
+history = model.fit(
+    train_images, train_labels,
+    epochs=5,
+    validation_data=(test_images, test_labels)
+)
+
+# Step 7: Evaluate the Model
+loss, accuracy = model.evaluate(test_images, test_labels)
+print(f"\nTest Accuracy: {accuracy * 100:.2f}%")
+
+# Step 8: Save the Model
+model.save("transfer_learning_model.h5")
+print("\nModel saved successfully!")
+
+```
+
+## OUTPUT
+
+<img width="1220" height="237" alt="image" src="https://github.com/user-attachments/assets/51da70c2-54de-4e48-a909-ab8617133857" />
+
+<img width="270" height="77" alt="image" src="https://github.com/user-attachments/assets/17dbc8d7-cc99-480a-b6aa-b25cd659732b" />
+
+
+
+## RESULT
+
+Thus, the transfer learning model using MobileNetV2 was successfully implemented, trained, evaluated on the CIFAR-10 dataset.

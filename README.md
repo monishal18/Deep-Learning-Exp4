@@ -51,9 +51,9 @@ STEP 8: Save the trained model
 
 ## PROGRAM
 
-**Name:** LIVYA DHARSHINI G   
+**Name:** monisha.l   
 
-**Register Number:** 2305001013
+**Register Number:** 2305001019
 
 ``` Python
 # Experiment: Transfer Learning for Image Classification
